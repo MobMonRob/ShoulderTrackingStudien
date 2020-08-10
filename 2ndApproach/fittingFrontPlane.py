@@ -27,7 +27,7 @@ def fitPlaneLTSQ(XYZ):
 # data[:, 2] /=10
 # print(data)
 pcd_load = o3d.io.read_point_cloud('/home/nouran/Desktop/nouran/GUC/bachelor/pointCloud/front.pcd')
-# pcd_load = o3d.io.read_point_cloud('/home/nouran/Desktop/nouran/GUC/bachelor/pointCloud/back.pcd')
+
 
 data = np.array(pcd_load.points)
 

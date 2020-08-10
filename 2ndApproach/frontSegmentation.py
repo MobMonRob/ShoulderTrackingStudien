@@ -4,7 +4,7 @@ import random
 
 
 def main():
-    cloud = pcl.load('/home/nouran/Desktop/nouran/GUC/bachelor/pointCloud/voxelGridShado.pcd')
+    cloud = pcl.load('/home/nouran/Desktop/nouran/GUC/bachelor/pointCloud/shoulder.pcd')
     seg = cloud.make_segmenter_normals(ksearch=50)
     seg.set_optimize_coefficients(True)
     seg.set_model_type(pcl.SACMODEL_NORMAL_PLANE)
