@@ -1,12 +1,14 @@
 import pcl
 import numpy as np
-import random
 
 
 def main():
-    cloud = pcl.load('/home/nouran/Desktop/nouran/GUC/bachelor/pointCloud/cropped.pcd')
+    cloud = pcl.load('https://github.com/MobMonRob/ShoulderTrackingStudien/blob/dev/data/cropped.pcd')
 
+    # Create the segmentation object
     seg = cloud.make_segmenter_normals(ksearch=50)
+
+    # Setting the parameters of the segmenter
     seg.set_optimize_coefficients(True)
     seg.set_model_type(pcl.SACMODEL_NORMAL_PLANE)
     seg.set_method_type(pcl.SAC_RANSAC)
@@ -22,23 +24,20 @@ def main():
     print('Model coefficients: ' + str(coefficients[0]) + ' ' + str(
         coefficients[1]) + ' ' + str(coefficients[2]) + ' ' + str(coefficients[3]))
 
-
     print('Model inliers: ' + str(len(indices)))
-    for i in range(0, len(indices)):
-        print(str(indices[i]) + ', x: ' + str(cloud[indices[i]][0]) + ', y : ' +
-              str(cloud[indices[i]][1]) + ', z : ' + str(cloud[indices[i]][2]))
+
     points = np.zeros((len(indices), 3), dtype=np.float32)
-    back=pcl.PointCloud()
+    back = pcl.PointCloud()
+
+    # Loop to fill points array
     for i in range(0, len(indices)):
-            points[i][0] = cloud[indices[i]][0]
-            points[i][1] = cloud[indices[i]][1]
-            points[i][2] = cloud[indices[i]][2]
+        points[i][0] = cloud[indices[i]][0]
+        points[i][1] = cloud[indices[i]][1]
+        points[i][2] = cloud[indices[i]][2]
     back.from_array(points)
 
-    pcl.save(back, '/home/nouran/Desktop/nouran/GUC/bachelor/pointCloud/back.pcd')
+    pcl.save(back, 'https://github.com/MobMonRob/ShoulderTrackingStudien/blob/dev/data/back.pcd')
 
 
 if __name__ == "__main__":
-    # import cProfile
-    # cProfile.run('main()', sort='time')
     main()

@@ -3,19 +3,23 @@ import numpy as np
 
 
 def main():
-    cloud = pcl.load(
-        "/home/nouran/Desktop/nouran/GUC/bachelor/repo/ShoulderTrackingStudien/data/shoulder.pcd")
+    cloud = pcl.load("/home/nouran/Desktop/nouran/GUC/bachelor/repo/ShoulderTrackingStudien/data/shoulder.pcd")
     print('PointCloud has: ' + str(cloud.size) + ' data points.')
 
+    # Build a passthrough filter to remove spurious NaNs
     passthrough = cloud.make_passthrough_filter()
     passthrough.set_filter_field_name('z')
     passthrough.set_filter_limits(0, 1.5)
     cloud_filtered = passthrough.filter()
     print('PointCloud has: ' + str(cloud_filtered.size) + ' data points.')
+
+    #  Estimate point normals
     ne = cloud_filtered.make_NormalEstimation()
     tree = cloud_filtered.make_kdtree()
     ne.set_SearchMethod(tree)
     ne.set_KSearch(50)
+
+    # Create the segmentation object for the planar model and set all the parameters
     seg = cloud_filtered.make_segmenter_normals(ksearch=50)
     seg.set_optimize_coefficients(True)
     seg.set_model_type(pcl.SACMODEL_NORMAL_PLANE)
@@ -30,6 +34,7 @@ def main():
 
     cloud_filtered2 = cloud_filtered.extract(indices, True)
 
+    # Create the segmentation object for cylinder segmentation and set all the parameters
     seg = cloud_filtered2.make_segmenter_normals(ksearch=50)
     seg.set_optimize_coefficients(True)
     seg.set_model_type(pcl.SACMODEL_CYLINDER)
@@ -45,28 +50,8 @@ def main():
     else:
         print("PointCloud representing the cylindrical component: " +
               str(cloud_cylinder.size) + " data points.")
-        pcl.save(cloud_cylinder, '/home/nouran/Desktop/nouran/GUC/bachelor/repo/ShoulderTrackingStudien/data/cylinder.pcd')
-    points = np.zeros((len(indices2), 3), dtype=np.float32)
-    points2 = np.zeros((cloud.size - len(indices2), 3), dtype=np.float32)
-    ind = 0
-    for j in range(0, cloud.size):
-        flag = True
-        for i in range(0, len(indices2)):
-            if j == 0:
-                points[i][0] = cloud[indices2[i]][0]
-                points[i][1] = cloud[indices2[i]][1]
-                points[i][2] = cloud[indices2[i]][2]
-            if j == indices2[i]:
-                flag = False
-                break
-        if flag:
-            points2[ind][0] = cloud[j][0]
-            points2[ind][1] = cloud[j][1]
-            points2[ind][2] = cloud[j][2]
-            ind = ind + 1
-    cropped = pcl.PointCloud()
-    cropped.from_array(points2)
-    pcl.save(cropped, '/home/nouran/Desktop/nouran/GUC/bachelor/pointCloud/noArm.pcd')
+        pcl.save(cloud_cylinder,
+                 'https://github.com/MobMonRob/ShoulderTrackingStudien/blob/dev/data/cylinder.pcd')
 
 
 if __name__ == "__main__":
