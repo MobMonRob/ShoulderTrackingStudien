@@ -48,7 +48,7 @@ realsense-viewer
 pcl_viewer file.pcd
 ```
 ## Exploring the repository
-#### The folder Filtering has the code of fitering the point cloud after extracting it from RTABMap in order to remove all the noise and have a point cloud of the shoulder only.
+The folder Filtering has the code of fitering the point cloud after extracting it from RTABMap in order to remove all the noise and have a point cloud of the shoulder only.
 #### The pickingPoints folder has the code of the first approach that I followed to get the best fitting planes on the back and the front of the shoulder. In this approach I reduced the number of the points in the point cloud using the voxel grid filter then I selected random points manually which would then be used to get the best fitting planes.
 #### The 2ndApproach folder has the code of the other approach that I followed. In this approach I tried to automate the step of selecting the points so I used the plane segmentation algorithm, then I used the segmented points to get the best fitting planes on the back and the front.
 #### The Cylinder.py file has the algorithm I tried to fit a cylinder on the arm.
